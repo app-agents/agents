@@ -71,9 +71,11 @@ what broke.
 
 ## Checklist
 
+- [ ] `npm run check` passes — regenerates types, verifies every reference, rebuilds the registry
 - [ ] `npm run typecheck` clean
-- [ ] `npm run registry` regenerated and committed
-- [ ] every capability in the manifest exists as a tool, and vice versa
+- [ ] `apps/<app>/src/types.d.ts` and `registry.json` committed
+- [ ] every capability in the manifest names a real exported tool
+- [ ] the expert ends on a `submit_result`-style tool with evidence, not on prose
 - [ ] prompt states what the agent cannot do
 - [ ] prompt has the untrusted-data clause
 - [ ] README has credentials + the unaffiliated line

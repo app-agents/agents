@@ -27,7 +27,7 @@ export const models = {
 
 export const __meta = {
   packageId: '@app-agents/gmail',
-  version: '0.3.0',
+  version: '0.3.1',
   entryAgents: ['gmail_agent'],
   packedAt: 0,
   description: 'Gmail agent — search, read and explain one mailbox, with message-level evidence',

@@ -9,18 +9,22 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
       - run: npm ci
-      - run: npm run typecheck
 
-      # Fails when a manifest is malformed, or when a committed registry is
-      # stale. generatedAt is excluded because it changes on every build.
-      - name: Registry is current
+      # Generated files are committed so editors work without a build, which
+      # means CI has to prove they are not stale.
+      - name: Regenerate types and registry
         run: |
+          npm run gen:types
           npm run registry
-          jq 'del(.generatedAt)' registry.json > "$RUNNER_TEMP/new.json"
-          git show HEAD:registry.json | jq 'del(.generatedAt)' > "$RUNNER_TEMP/old.json"
-          diff "$RUNNER_TEMP/old.json" "$RUNNER_TEMP/new.json"
+      - name: Generated files are current
+        run: |
+          git diff --exit-code -- 'apps/*/src/types.d.ts' registry.json
+
+      - run: npm run typecheck
+      - run: npm run check:wiring
+      - run: npm run build

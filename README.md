@@ -87,11 +87,19 @@ path from "a customer asked" to "here it is".
 
 ```bash
 npm install
+npm run check        # types, references, registry — the three things CI enforces
 npm run typecheck
-npm run registry
 node packages/cli/dist/index.js list   # after npm run build
 npx tsx packages/cli/src/index.ts list # without building
 ```
+
+Three checks guard the wiring, because prompts reference things by name:
+
+| command | catches |
+|---|---|
+| `gen:types` | writes `apps/*/src/types.d.ts`, narrowing model/tool/prompt/agent names, so a typo is a compile error |
+| `check:wiring` | agent sides, stop tools, subagents, entry agents, and manifest capabilities that name something the package doesn't export |
+| `registry` | a malformed manifest, with the field path, before it reaches the published registry |
 
 ## License
 

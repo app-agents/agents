@@ -21,6 +21,7 @@ import {
   describeCapabilities,
   findApp,
   isReadOnly,
+  parseRegistry,
   searchApps,
   type AppManifest,
   type Registry,
@@ -52,13 +53,9 @@ async function readSource(source: string): Promise<string> {
   return readFile(path.resolve(source), 'utf8');
 }
 
-function parseRegistry(text: string, source: string): Registry {
-  try {
-    return JSON.parse(text) as Registry;
-  } catch {
-    throw new Error(`${source} is not valid JSON`);
-  }
-}
+// parseRegistry from @app-agents/core validates against the zod schema, so a
+// malformed registry throws with a field path instead of yielding an object
+// whose missing properties only surface as `undefined` at render time.
 
 function findUpward(file: string, from: string): string | undefined {
   let dir = from;

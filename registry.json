@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-14T18:24:34.592Z",
+  "generatedAt": "2026-11-14T18:38:35.733Z",
   "apps": [
     {
       "app": "gmail",
@@ -37,8 +37,9 @@
           "agent": "gmail_agent",
           "capabilities": {
             "search_messages": "read",
-            "read_message": "read",
-            "read_thread": "read"
+            "get_message": "read",
+            "get_thread": "read",
+            "submit_result": "read"
           }
         }
       ],
@@ -83,7 +84,7 @@
             "list_organizations": "read",
             "list_ad_accounts": "read",
             "list_campaigns": "read",
-            "read_campaign_stats": "read"
+            "get_campaign_stats": "read"
           }
         },
         {

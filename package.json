@@ -7,10 +7,13 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build --workspace @app-agents/core && npm run build --workspaces --if-present",
+    "gen:types": "tsx scripts/gen-types.ts",
+    "check:wiring": "tsx scripts/check-wiring.ts",
+    "registry": "npm run build:core && tsx scripts/build-registry.ts",
     "build:core": "npm run build --workspace @app-agents/core",
-    "typecheck": "npm run build:core && npm run typecheck --workspaces --if-present",
-    "registry": "node scripts/build-registry.mjs",
+    "build": "npm run build:core && npm run build --workspaces --if-present",
+    "typecheck": "npm run gen:types && npm run build:core && npm run typecheck --workspaces --if-present",
+    "check": "npm run gen:types && npm run check:wiring && npm run registry",
     "cli": "npm --workspace @app-agents/cli run dev --"
   },
   "devDependencies": {

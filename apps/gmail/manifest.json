@@ -1,7 +1,13 @@
 {
   "app": "gmail",
   "title": "Gmail",
-  "aliases": ["gmail", "google mail", "googlemail", "workspace mail", "inbox"],
+  "aliases": [
+    "gmail",
+    "google mail",
+    "googlemail",
+    "workspace mail",
+    "inbox"
+  ],
   "package": "@app-agents/gmail",
   "connector": {
     "kind": "rest",
@@ -12,7 +18,9 @@
   "credentials": [
     {
       "env": "GOOGLE_ACCESS_TOKEN",
-      "scopes": ["https://www.googleapis.com/auth/gmail.readonly"],
+      "scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ],
       "how": "Create an OAuth client in Google Cloud Console, enable the Gmail API, and mint an access token for gmail.readonly. Refresh the token outside the agent."
     }
   ],
@@ -20,13 +28,14 @@
     {
       "id": "mail_research",
       "title": "Mail research",
-      "job": "Answers any question about one mailbox — what happened, who is waiting on what, what is still open — and backs every claim with the message ids it read.",
+      "job": "Answers any question about one mailbox \u2014 what happened, who is waiting on what, what is still open \u2014 and backs every claim with the message ids it read.",
       "status": "beta",
       "agent": "gmail_agent",
       "capabilities": {
         "search_messages": "read",
-        "read_message": "read",
-        "read_thread": "read"
+        "get_message": "read",
+        "get_thread": "read",
+        "submit_result": "read"
       }
     }
   ],

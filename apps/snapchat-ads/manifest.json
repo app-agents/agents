@@ -1,7 +1,14 @@
 {
   "app": "snapchat-ads",
   "title": "Snapchat Ads",
-  "aliases": ["snapchat", "snap", "snap ads", "snapchat ads", "snap inc", "ads manager"],
+  "aliases": [
+    "snapchat",
+    "snap",
+    "snap ads",
+    "snapchat ads",
+    "snap inc",
+    "ads manager"
+  ],
   "package": "@app-agents/snapchat-ads",
   "connector": {
     "kind": "rest",
@@ -12,7 +19,9 @@
   "credentials": [
     {
       "env": "SNAP_ACCESS_TOKEN",
-      "scopes": ["snapchat-marketing-api"],
+      "scopes": [
+        "snapchat-marketing-api"
+      ],
       "how": "Register an app in the Snap Developer Portal, add the Marketing API, complete OAuth for the advertiser, and pass the resulting access token. Snap reviews app access before it works in production."
     }
   ],
@@ -27,7 +36,7 @@
         "list_organizations": "read",
         "list_ad_accounts": "read",
         "list_campaigns": "read",
-        "read_campaign_stats": "read"
+        "get_campaign_stats": "read"
       }
     },
     {

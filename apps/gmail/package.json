@@ -1,6 +1,6 @@
 {
   "name": "@app-agents/gmail",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Gmail agent \u2014 search, read and explain one mailbox, with message-level evidence",
   "type": "module",
   "main": "./dist/index.js",

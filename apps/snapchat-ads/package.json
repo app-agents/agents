@@ -1,7 +1,7 @@
 {
   "name": "@app-agents/snapchat-ads",
-  "version": "0.1.1",
-  "description": "Snapchat Ads agent — read campaign performance and say what to change first",
+  "version": "0.1.2",
+  "description": "Snapchat Ads agent \u2014 read campaign performance and say what to change first",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

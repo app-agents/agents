@@ -24,7 +24,7 @@ export const models = {
 
 export const __meta = {
   packageId: '@app-agents/snapchat-ads',
-  version: '0.1.0',
+  version: '0.1.2',
   entryAgents: ['snapchat_ads_agent'],
   packedAt: 0,
   description: 'Snapchat Ads agent — read campaign performance, say what to change first',

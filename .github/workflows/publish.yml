@@ -60,6 +60,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      # A published version is immutable. Catch a broken reference before the
+      # tag becomes a permanent mistake.
+      - name: References resolve
+        run: npm run check:wiring
+
       - name: Publish
         run: npm publish --workspace "${{ steps.pkg.outputs.name }}" --access public
 
