@@ -1,0 +1,24 @@
+{
+  "name": "@app-agents/cli",
+  "version": "0.1.0",
+  "description": "Find, install and inspect app agents",
+  "type": "module",
+  "bin": {
+    "app-agents": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@app-agents/core": "0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

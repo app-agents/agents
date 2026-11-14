@@ -1,0 +1,34 @@
+{
+  "app": "gmail",
+  "title": "Gmail",
+  "aliases": ["gmail", "google mail", "googlemail", "workspace mail", "inbox"],
+  "package": "@app-agents/gmail",
+  "connector": {
+    "kind": "rest",
+    "baseUrl": "https://gmail.googleapis.com",
+    "auth": "oauth",
+    "writes": false
+  },
+  "credentials": [
+    {
+      "env": "GOOGLE_ACCESS_TOKEN",
+      "scopes": ["https://www.googleapis.com/auth/gmail.readonly"],
+      "how": "Create an OAuth client in Google Cloud Console, enable the Gmail API, and mint an access token for gmail.readonly. Refresh the token outside the agent."
+    }
+  ],
+  "experts": [
+    {
+      "id": "inbox_triage",
+      "title": "Inbox triage",
+      "job": "Decides which messages need the reader, why, and writes the replies — without touching the mailbox.",
+      "status": "beta",
+      "agent": "gmail_agent",
+      "capabilities": {
+        "list_messages": "read",
+        "read_message": "read"
+      }
+    }
+  ],
+  "gate": "gmail.readonly is a restricted scope. For external users Google requires app verification plus a CASA security assessment, and an OAuth client left in Testing expires refresh tokens after 7 days.",
+  "dataRetention": "Message bodies go to the model provider on every run. Do not persist them beyond the thread."
+}

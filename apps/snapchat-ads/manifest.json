@@ -1,0 +1,48 @@
+{
+  "app": "snapchat-ads",
+  "title": "Snapchat Ads",
+  "aliases": ["snapchat", "snap", "snap ads", "snapchat ads", "snap inc", "ads manager"],
+  "package": "@app-agents/snapchat-ads",
+  "connector": {
+    "kind": "rest",
+    "baseUrl": "https://adsapi.snapchat.com/v1",
+    "auth": "oauth",
+    "writes": false
+  },
+  "credentials": [
+    {
+      "env": "SNAP_ACCESS_TOKEN",
+      "scopes": ["snapchat-marketing-api"],
+      "how": "Register an app in the Snap Developer Portal, add the Marketing API, complete OAuth for the advertiser, and pass the resulting access token. Snap reviews app access before it works in production."
+    }
+  ],
+  "experts": [
+    {
+      "id": "campaign_report",
+      "title": "Campaign report",
+      "job": "Reads delivery and spend across campaigns and ranks the one change most likely to help.",
+      "status": "beta",
+      "agent": "campaign_report_agent",
+      "capabilities": {
+        "list_organizations": "read",
+        "list_ad_accounts": "read",
+        "list_campaigns": "read",
+        "read_campaign_stats": "read"
+      }
+    },
+    {
+      "id": "story_ad_launch",
+      "title": "Story ad launch",
+      "job": "Publishes a story ad end to end and reports its id, status and first-day delivery.",
+      "status": "gap",
+      "capabilities": {
+        "create_campaign": "write",
+        "create_ad_squad": "write",
+        "upload_creative": "write",
+        "publish_ad": "confirm"
+      }
+    }
+  ],
+  "gate": "Read-only is self-service: Snap's Ads MCP needs an org admin to approve the agent and nothing else. Publishing an ad needs your own Snap app registration, Marketing API review, and a client id registered per agent.",
+  "dataRetention": "Snap Developer Terms limit how long data returned through Snap APIs may be retained. Check the current terms before caching stats."
+}

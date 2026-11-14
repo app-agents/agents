@@ -1,0 +1,42 @@
+# app-agents
+
+> Agents for apps. Installable Standard Agents, one npm package per app.
+
+Install the CLI: npm install -g @app-agents/cli
+
+Commands:
+- `app-agents list` — every app, expert, status and permission mode
+- `app-agents search <query>` — by app name, alias, or job
+- `app-agents show <app>` — capabilities, credentials, platform gates
+- `app-agents auth <app>` — what an operator must provide
+- `app-agents add <app>` — install the package
+
+Registry (machine readable): https://cdn.jsdelivr.net/gh/app-agents/agents@main/registry.json
+Registry schema: schema 1; fields: app, title, aliases, package, connector, credentials, experts[], gate, dataRetention
+
+Apps:
+
+## gmail
+- package: @app-agents/gmail
+- aliases: gmail, google mail, googlemail, workspace mail, inbox
+- connector: rest · oauth · read-only
+- expert inbox_triage (beta): decides which messages need the reader, why, and writes the replies. Read-only.
+- credentials: GOOGLE_ACCESS_TOKEN with scope https://www.googleapis.com/auth/gmail.readonly
+- gate: restricted scope; external users need Google app verification and a CASA assessment. Testing-mode clients expire refresh tokens after 7 days.
+
+## snapchat-ads
+- package: @app-agents/snapchat-ads
+- aliases: snapchat, snap, snap ads, snapchat ads, snap inc, ads manager
+- connector: rest · oauth · read-only
+- expert campaign_report (beta): reads delivery and spend across campaigns and ranks the one change most likely to help. Read-only.
+- expert story_ad_launch (gap): publish a story ad end to end. Not built. Would require write capabilities and a confirm step.
+- credentials: SNAP_ACCESS_TOKEN (Snap Marketing API)
+- gate: read-only is self-service via Snap's Ads MCP; writing needs your own Snap app registration, Marketing API review, and a client id registered per agent.
+
+Conventions:
+- Agents are named after the app they are expert in, not the capability.
+- The app slug is the lookup handle; one package per app; jobs live inside it.
+- Every capability is declared in the app manifest with level read | write | confirm.
+- Nothing not declared in the manifest is reachable.
+
+Source: https://github.com/app-agents/agents

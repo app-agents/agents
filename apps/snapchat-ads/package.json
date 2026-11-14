@@ -1,0 +1,46 @@
+{
+  "name": "@app-agents/snapchat-ads",
+  "version": "0.1.0",
+  "description": "Snapchat Ads agent \u2014 read campaign performance and say what to change first",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "manifest.json",
+    "README.md"
+  ],
+  "keywords": [
+    "standardagent",
+    "mcp",
+    "snapchat",
+    "snap",
+    "ads",
+    "marketing",
+    "agent"
+  ],
+  "license": "MIT",
+  "standardagent": {
+    "entryAgents": [
+      "snapchat_ads_agent"
+    ]
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@standardagents/anthropic": "^0.45.10",
+    "@standardagents/spec": "^0.45.10",
+    "zod": "^4.0.0"
+  },
+  "peerDependencies": {
+    "@standardagents/spec": ">=0.2.0"
+  }
+}

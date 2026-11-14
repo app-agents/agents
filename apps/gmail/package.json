@@ -1,0 +1,45 @@
+{
+  "name": "@app-agents/gmail",
+  "version": "0.1.0",
+  "description": "Gmail agent \u2014 read an inbox, decide what needs a reply, and draft the replies",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "manifest.json",
+    "README.md"
+  ],
+  "keywords": [
+    "standardagent",
+    "mcp",
+    "gmail",
+    "google",
+    "email",
+    "agent"
+  ],
+  "license": "MIT",
+  "standardagent": {
+    "entryAgents": [
+      "gmail_agent"
+    ]
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@standardagents/anthropic": "^0.45.10",
+    "@standardagents/spec": "^0.45.10",
+    "zod": "^4.0.0"
+  },
+  "peerDependencies": {
+    "@standardagents/spec": ">=0.2.0"
+  }
+}
