@@ -45,11 +45,36 @@ if (problems.length > 0) {
 
 apps.sort((a, b) => a.app.localeCompare(b.app));
 
+const registryPath = path.join(root, 'registry.json');
+
+/**
+ * Deterministic output: keep the previous `generatedAt` when the apps are
+ * unchanged. A timestamp that moves on every build makes `git diff --exit-code`
+ * useless in CI — it would either fail always or be normalised away, and both
+ * hide a genuinely stale registry.
+ */
+const previous = await readPreviousRegistry(registryPath);
+const unchanged = previous !== null && JSON.stringify(previous.apps) === JSON.stringify(apps);
+
 const registry = registrySchema.parse({
   schema: 1,
-  generatedAt: new Date().toISOString(),
+  generatedAt: unchanged ? previous.generatedAt : new Date().toISOString(),
   apps,
 });
 
-await writeFile(path.join(root, 'registry.json'), `${JSON.stringify(registry, null, 2)}\n`);
-console.log(`registry.json: ${apps.length} app(s) — ${apps.map((app) => app.app).join(', ')}`);
+await writeFile(registryPath, `${JSON.stringify(registry, null, 2)}\n`);
+console.log(
+  `registry.json: ${apps.length} app(s) — ${apps.map((app) => app.app).join(', ')}${
+    unchanged ? ' (unchanged)' : ''
+  }`,
+);
+
+async function readPreviousRegistry(target: string) {
+  if (!existsSync(target)) return null;
+  try {
+    return registrySchema.parse(JSON.parse(await readFile(target, 'utf8')));
+  } catch {
+    // A malformed file is about to be overwritten; treat it as absent.
+    return null;
+  }
+}
