@@ -1,0 +1,26 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run typecheck
+
+      # Fails when a manifest is malformed, or when a committed registry is
+      # stale. generatedAt is excluded because it changes on every build.
+      - name: Registry is current
+        run: |
+          npm run registry
+          jq 'del(.generatedAt)' registry.json > "$RUNNER_TEMP/new.json"
+          git show HEAD:registry.json | jq 'del(.generatedAt)' > "$RUNNER_TEMP/old.json"
+          diff "$RUNNER_TEMP/old.json" "$RUNNER_TEMP/new.json"

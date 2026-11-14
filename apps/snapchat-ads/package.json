@@ -41,9 +41,6 @@
     "@standardagents/spec": "^0.45.10",
     "zod": "^4.0.0"
   },
-  "peerDependencies": {
-    "@standardagents/spec": ">=0.2.0"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/app-agents/agents.git",
