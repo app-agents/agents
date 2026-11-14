@@ -6,12 +6,15 @@
   "bin": {
     "app-agents": "./dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "dev": "tsx src/index.ts"
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@app-agents/core": "0.1.0"
@@ -20,5 +23,14 @@
     "@types/node": "^22.10.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/app-agents/agents.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/app-agents/agents#readme",
+  "bugs": {
+    "url": "https://github.com/app-agents/agents/issues"
   }
 }
