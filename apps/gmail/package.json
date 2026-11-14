@@ -1,7 +1,7 @@
 {
   "name": "@app-agents/gmail",
-  "version": "0.1.0",
-  "description": "Gmail agent \u2014 read an inbox, decide what needs a reply, and draft the replies",
+  "version": "0.1.1",
+  "description": "Gmail agent — read an inbox, decide what needs a reply, and draft the replies",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

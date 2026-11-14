@@ -1,6 +1,6 @@
 {
   "name": "@app-agents/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Find, install and inspect app agents",
   "type": "module",
   "bin": {
