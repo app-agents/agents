@@ -1,10 +1,12 @@
 # Gmail — `@app-agents/gmail`
 
-Read an inbox, decide what needs the reader, and write the replies.
+Two jobs, both read-only:
 
-The output is a report: what needs a reply (with drafts), what needs action,
-what is noise, and anything that tried to instruct the agent from inside an
-email. Nothing is sent, archived, or labelled — this expert has no tool that can.
+- **Inbox triage** — what needs the reader, why, with draft replies written out.
+- **Application extract** — the jobs the person actually applied to in a date
+  range, as structured rows with the email that proves each one.
+
+Nothing is sent, archived, or labelled. Neither expert has a tool that can.
 
 ## Install
 
@@ -36,15 +38,55 @@ Both are real costs. Decide before promising a "connect your Gmail" button.
 |---|---|---|
 | `inbox_triage` | `list_messages` | read |
 | `inbox_triage` | `read_message` | read |
+| `application_extract` | `list_messages` | read |
+| `application_extract` | `read_message` | read |
 
 Nothing else is reachable. There is no send, no label, no archive, no trash.
 
-## Why drafts are text, not Gmail drafts
+## Application extract
+
+Give it a date range; get JSON back.
+
+```ts
+application_extract_agent({ periodStart: "2026-10-01", periodEnd: "2026-11-01" })
+```
+
+```json
+{
+  "period": { "from": "2026-10-01", "to": "2026-11-01" },
+  "checked": 18,
+  "applications": [
+    {
+      "company": "Acme AB",
+      "role": "Backend Engineer",
+      "location": "Stockholm",
+      "appliedAt": "2026-10-14",
+      "channel": "ats",
+      "sourceUrl": "https://boards.greenhouse.io/acme/jobs/123",
+      "messageId": "18f2c1...",
+      "confidence": "high",
+      "note": null
+    }
+  ],
+  "skipped": [{ "messageId": "18f2b9...", "reason": "saved-search digest, no submission" }]
+}
+```
+
+`messageId` is required on every row — it is the evidence. Rows that cannot be
+read confidently go to `skipped` with a reason instead of being guessed, so the
+caller can decide whether to ask.
+
+### Why it is read-only and JSON-only
+
+The rows feed a report a person is legally responsible for. So the expert never
+writes, never merges two roles at one company, and returns no prose — only the
+object above. Empty fields are `null`, never invented.
+
+## Why inbox drafts are text, not Gmail drafts
 
 Writing a draft into Gmail needs `gmail.compose` — a write scope that also
 allows `users.drafts.send`. That turns a read-only expert into an account-access
-decision for the operator. So v1 returns draft text in the report and a human
-pastes it.
+decision for the operator. So v1 returns draft text and a human pastes it.
 
 Promote it later as a separate expert with `confirm` in its capability list, not
 by widening this one.
@@ -52,15 +94,17 @@ by widening this one.
 ## Shape
 
 ```
-src/agents/gmail_agent.ts      entry agent: prompt on side A, human on side B
-src/prompts/gmail_triage.ts    the judgment: what matters, ranked, plus the report shape
-src/tools/list_messages.ts     ids only, so a large inbox costs one call
-src/tools/get_message.ts       one message, headers + text, truncated
-src/models/gmail_triage_model.ts
+src/agents/gmail_agent.ts                 entry agent: triage
+src/agents/application_extract_agent.ts   entry agent: extraction, exposed as a tool
+src/prompts/gmail_triage.ts               the triage judgment and report shape
+src/prompts/application_extract.ts        the extraction contract and JSON shape
+src/tools/list_messages.ts                ids only, so a large inbox costs one call
+src/tools/get_message.ts                  one message, headers + text, truncated
+src/models/…                              one model per prompt
 ```
 
-Single job, so the entry agent runs the prompt directly. See
-`apps/snapchat-ads` for the router-plus-subagents shape once there are two.
+Both entry agents are exported in `__meta.entryAgents`, so a runtime or a caller
+picks the job explicitly rather than relying on a router to guess.
 
 ---
 

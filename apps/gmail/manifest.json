@@ -27,8 +27,19 @@
         "list_messages": "read",
         "read_message": "read"
       }
+    },
+    {
+      "id": "application_extract",
+      "title": "Application extract",
+      "job": "Turns a date range into one structured row per job application, each with the message that proves it and a confidence level.",
+      "status": "beta",
+      "agent": "application_extract_agent",
+      "capabilities": {
+        "list_messages": "read",
+        "read_message": "read"
+      }
     }
   ],
   "gate": "gmail.readonly is a restricted scope. For external users Google requires app verification plus a CASA security assessment, and an OAuth client left in Testing expires refresh tokens after 7 days.",
-  "dataRetention": "Message bodies go to the model provider on every run. Do not persist them beyond the thread."
+  "dataRetention": "Message bodies go to the model provider on every run. Do not persist them beyond the thread; keep the extracted rows, not the mail."
 }

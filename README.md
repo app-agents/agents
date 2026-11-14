@@ -19,6 +19,7 @@ npx @app-agents/cli add snapchat-ads
 | App | Expert | Status | Mode | What it decides |
 |---|---|---|---|---|
 | [gmail](apps/gmail) | `inbox_triage` | beta | read-only | Which messages need you, why, and what to reply |
+| [gmail](apps/gmail) | `application_extract` | beta | read-only | Which jobs you actually applied to in a period, with the email that proves each one |
 | [snapchat-ads](apps/snapchat-ads) | `campaign_report` | beta | read-only | What happened in your campaigns and the one change to make first |
 | [snapchat-ads](apps/snapchat-ads) | `story_ad_launch` | **gap** | write | Publish a story ad end to end — *not built yet* |
 
