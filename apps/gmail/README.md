@@ -1,12 +1,9 @@
 # Gmail — `@app-agents/gmail`
 
-Two jobs, both read-only:
+An expert in one mailbox. Ask it anything about the mail — what happened, who is
+waiting on you, what is still open — and it answers with the message ids it read.
 
-- **Inbox triage** — what needs the reader, why, with draft replies written out.
-- **Application extract** — the jobs the person actually applied to in a date
-  range, as structured rows with the email that proves each one.
-
-Nothing is sent, archived, or labelled. Neither expert has a tool that can.
+Read-only. No send, no labels, no archive, no trash.
 
 ## Install
 
@@ -20,8 +17,8 @@ npm install @app-agents/gmail
 `https://www.googleapis.com/auth/gmail.readonly` scope.
 
 Create an OAuth client in Google Cloud Console, enable the Gmail API, and mint
-the token. Refresh happens in your host, not in this package: the spec's
-credential grants cover bearer tokens, not refresh flows.
+the token. Refresh happens in your host: the spec's credential grants cover
+bearer tokens, not refresh flows.
 
 ### The gate
 
@@ -30,81 +27,63 @@ credential grants cover bearer tokens, not refresh flows.
 - Google requires app verification plus a CASA security assessment.
 - An OAuth client left in Testing expires refresh tokens after 7 days.
 
-Both are real costs. Decide before promising a "connect your Gmail" button.
+## What ships
 
-## Capabilities
+Four tools and one agent.
 
-| Expert | Action | Level |
-|---|---|---|
-| `inbox_triage` | `list_messages` | read |
-| `inbox_triage` | `read_message` | read |
-| `application_extract` | `list_messages` | read |
-| `application_extract` | `read_message` | read |
+| | |
+|---|---|
+| `search_messages` | Query → one readable row per message (sender, subject, date, snippet, labels) in a single step |
+| `get_thread` | A whole conversation, in order, with text |
+| `get_message` | One message, headers and body |
+| `submit_result` | The terminal tool: the answer as a validated object with evidence |
+| `gmail_agent` | The domain expert. Ends on `submit_result`, never on prose |
 
-Nothing else is reachable. There is no send, no label, no archive, no trash.
+## Structured output
 
-## Application extract
-
-Give it a date range; get JSON back.
-
-```ts
-application_extract_agent({ periodStart: "2026-10-01", periodEnd: "2026-11-01" })
-```
+The agent does not answer in prose. It ends by calling `submit_result`, whose
+arguments are validated by the runtime:
 
 ```json
 {
-  "period": { "from": "2026-10-01", "to": "2026-11-01" },
-  "checked": 18,
-  "applications": [
-    {
-      "company": "Acme AB",
-      "role": "Backend Engineer",
-      "location": "Stockholm",
-      "appliedAt": "2026-10-14",
-      "channel": "ats",
-      "sourceUrl": "https://boards.greenhouse.io/acme/jobs/123",
-      "messageId": "18f2c1...",
-      "confidence": "high",
-      "note": null
-    }
+  "answer": "Two people are waiting on a reply: …",
+  "evidence": [
+    { "messageId": "18f2c1…", "subject": "Re: interview", "from": "…",
+      "date": "…", "supports": "the interview scheduling question" }
   ],
-  "skipped": [{ "messageId": "18f2b9...", "reason": "saved-search digest, no submission" }]
+  "confidence": "high",
+  "unresolved": "Could not tell whether the Sep 12 thread was answered."
 }
 ```
 
-`messageId` is required on every row — it is the evidence. Rows that cannot be
-read confidently go to `skipped` with a reason instead of being guessed, so the
-caller can decide whether to ask.
+Every claim carries a message id. That is the difference between an answer you
+can check and an answer you have to trust. See
+[docs/structured-output.md](../../docs/structured-output.md) for the rule every
+agent in this repo follows.
 
-### Why it is read-only and JSON-only
+## Tasks are not in here
 
-The rows feed a report a person is legally responsible for. So the expert never
-writes, never merges two roles at one company, and returns no prose — only the
-object above. Empty fields are `null`, never invented.
+This package is Gmail competence, not job-search or inbox-management opinions.
+The prompts for specific jobs live in `examples/`, and in the apps that need
+them:
 
-## Why inbox drafts are text, not Gmail drafts
+- [examples/inbox-triage](../inbox-triage) — what needs a reply, and draft replies
+- [examples/application-extract](../application-extract) — dated application rows with evidence
 
-Writing a draft into Gmail needs `gmail.compose` — a write scope that also
-allows `users.drafts.send`. That turns a read-only expert into an account-access
-decision for the operator. So v1 returns draft text and a human pastes it.
-
-Promote it later as a separate expert with `confirm` in its capability list, not
-by widening this one.
+Copy the prompt into your app and call these tools directly. If a task turns out
+to be useful to several apps, it graduates to its own package named after the
+task, e.g. `@app-agents/job-applications` — never bolted onto the Gmail package.
 
 ## Shape
 
 ```
-src/agents/gmail_agent.ts                 entry agent: triage
-src/agents/application_extract_agent.ts   entry agent: extraction, exposed as a tool
-src/prompts/gmail_triage.ts               the triage judgment and report shape
-src/prompts/application_extract.ts        the extraction contract and JSON shape
-src/tools/list_messages.ts                ids only, so a large inbox costs one call
-src/tools/get_message.ts                  one message, headers + text, truncated
-src/models/…                              one model per prompt
+src/tools/search_messages.ts   query -> rows, headers included
+src/tools/get_thread.ts        a conversation as one object
+src/tools/get_message.ts       one message, text truncated
+src/tools/submit_result.ts     the terminal, validated result
+src/prompts/gmail.ts           domain knowledge: query syntax, limits, trust
+src/agents/gmail_agent.ts      stopTool: submit_result
 ```
-
-Both entry agents are exported in `__meta.entryAgents`, so a runtime or a caller
-picks the job explicitly rather than relying on a router to guess.
 
 ---
 

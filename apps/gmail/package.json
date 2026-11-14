@@ -1,7 +1,7 @@
 {
   "name": "@app-agents/gmail",
-  "version": "0.2.0",
-  "description": "Gmail agent \u2014 triage an inbox, and extract the job applications sent in a period",
+  "version": "0.3.0",
+  "description": "Gmail agent \u2014 search, read and explain one mailbox, with message-level evidence",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

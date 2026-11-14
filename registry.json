@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-14T18:12:05.406Z",
+  "generatedAt": "2026-11-14T18:24:34.592Z",
   "apps": [
     {
       "app": "gmail",
@@ -30,30 +30,20 @@
       ],
       "experts": [
         {
-          "id": "inbox_triage",
-          "title": "Inbox triage",
-          "job": "Decides which messages need the reader, why, and writes the replies — without touching the mailbox.",
+          "id": "mail_research",
+          "title": "Mail research",
+          "job": "Answers any question about one mailbox — what happened, who is waiting on what, what is still open — and backs every claim with the message ids it read.",
           "status": "beta",
           "agent": "gmail_agent",
           "capabilities": {
-            "list_messages": "read",
-            "read_message": "read"
-          }
-        },
-        {
-          "id": "application_extract",
-          "title": "Application extract",
-          "job": "Turns a date range into one structured row per job application, each with the message that proves it and a confidence level.",
-          "status": "beta",
-          "agent": "application_extract_agent",
-          "capabilities": {
-            "list_messages": "read",
-            "read_message": "read"
+            "search_messages": "read",
+            "read_message": "read",
+            "read_thread": "read"
           }
         }
       ],
       "gate": "gmail.readonly is a restricted scope. For external users Google requires app verification plus a CASA security assessment, and an OAuth client left in Testing expires refresh tokens after 7 days.",
-      "dataRetention": "Message bodies go to the model provider on every run. Do not persist them beyond the thread; keep the extracted rows, not the mail."
+      "dataRetention": "Message bodies go to the model provider on every run. Do not persist them beyond the thread; keep the answer and the evidence ids, not the mail."
     },
     {
       "app": "snapchat-ads",

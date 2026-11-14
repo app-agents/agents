@@ -18,8 +18,7 @@ npx @app-agents/cli add snapchat-ads
 
 | App | Expert | Status | Mode | What it decides |
 |---|---|---|---|---|
-| [gmail](apps/gmail) | `inbox_triage` | beta | read-only | Which messages need you, why, and what to reply |
-| [gmail](apps/gmail) | `application_extract` | beta | read-only | Which jobs you actually applied to in a period, with the email that proves each one |
+| [gmail](apps/gmail) | `mail_research` | beta | read-only | Anything about one mailbox, with the message ids behind every claim |
 | [snapchat-ads](apps/snapchat-ads) | `campaign_report` | beta | read-only | What happened in your campaigns and the one change to make first |
 | [snapchat-ads](apps/snapchat-ads) | `story_ad_launch` | **gap** | write | Publish a story ad end to end — *not built yet* |
 
@@ -49,6 +48,10 @@ token on npm: [docs/naming.md](docs/naming.md).
    demand before it works, and what the vendor's terms say about retention.
    `registry.json` is generated from these, never edited by hand.
 
+And one rule every agent follows: **it ends on a validated tool call, not on
+prose** — with evidence ids, a confidence level, and an explicit list of what it
+could not determine. See [docs/structured-output.md](docs/structured-output.md).
+
 ```bash
 npm run registry   # rebuild registry.json from apps/*/manifest.json
 ```
@@ -65,6 +68,8 @@ apps/<app>/            one workspace package per app
 packages/core/         manifest types and registry helpers
 packages/cli/          list / search / show / auth / add
 skills/translate-mcp/  how to turn an MCP server or skill into an app here
+examples/              task prompts for apps to copy — deliberately not packages
+docs/                  naming, adding an app, structured output
 ```
 
 ## Adding an app

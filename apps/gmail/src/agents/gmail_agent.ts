@@ -1,18 +1,20 @@
 import { defineAgent } from '@standardagents/spec';
 
 /**
- * Entry agent. Human on side B, the triage prompt on side A.
+ * The domain agent: one mailbox, any question.
  *
- * The entry agent is what a runtime installs, a platform approves, and another
- * agent calls. Jobs live inside it as prompts or subagents — see
- * apps/snapchat-ads for the dispatcher shape once there is more than one job.
+ * It ends on `submit_result`, not on a text reply, so every answer arrives as
+ * a validated object with evidence. Callers can trust the envelope without
+ * parsing prose, and an answer with no evidence is visibly empty rather than
+ * quietly confident.
  */
 export default defineAgent({
   name: 'gmail_agent',
   sideA: {
-    prompt: 'gmail_triage',
-    stopOnResponse: true,
-    maxSteps: 14,
+    prompt: 'gmail',
+    stopTool: 'submit_result',
+    stopToolResponseProperty: 'result',
+    maxSteps: 16,
   },
   sideB: { human: true },
 });
