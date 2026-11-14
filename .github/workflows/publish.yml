@@ -4,10 +4,16 @@ name: publish
 # Uses npm trusted publishing (OIDC), so there is no token to store or rotate.
 #
 # One-time setup per package, on npmjs.com (needs 2FA):
-#   Package → Settings → Trusted Publisher → GitHub Actions
-#     repository: app-agents/agents
-#     workflow:   publish.yml
+#   npmjs.com → Packages → <package> → Settings → Trusted publishing → GitHub Actions
+#     Organization or user: app-agents
+#     Repository:            agents
+#     Workflow filename:     publish.yml
+#     Allowed actions:       ALSO tick "Allow npm publish"
+#                            (new configs default to stage-only)
 #   Repeat for @app-agents/core, gmail, snapchat-ads, cli.
+#
+# A new trusted publisher expires after 2 days unless the first publish
+# succeeds, so configure all four and release once, promptly.
 
 on:
   push:
@@ -28,12 +34,13 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
+          package-manager-cache: false # never cache in release builds
 
       # Trusted publishing needs a recent npm.
       - run: npm install -g npm@latest
